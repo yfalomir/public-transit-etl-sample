@@ -1,0 +1,25 @@
+{
+    "VTN_1_1": {
+        "TransportType": "BUS",
+        "LineName": "Heusdenhout - Westerpark",
+        "LinePublicNumber": "1",
+        "DataOwnerCode": "VTN",
+        "DestinationName50": "Westerpark via Tuinzigt",
+        "LinePlanningNumber": "1",
+        "LineDirection": "1"
+    },
+    "HTM_6_1": {
+        "TransportType": "TRAM",
+        "LineName": "Den Haag Leyenburg - Leidschendam Leidsenhage",
+        "LinePublicNumber": "6",
+        "DataOwnerCode": "HTM",
+        "DestinationName50": "Leidschendam Leidsenhage",
+        "LinePlanningNumber": "6",
+        "LineDirection": "1"
+    },
+    "HTM_6_2": {
+        "DataOwnerCode": "HTM",
+        "LinePlanningNumber": "6",
+        "LineDirection": "2"
+    }
+}
