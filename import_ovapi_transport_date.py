@@ -3,10 +3,33 @@ import time
 import sqlite3
 from datetime import datetime
 
-# Function to query the API
+# Mandatory keys that describe a transport line in the OVAPI format
+# Possible improvement: Manage attributes through class/Pydantic Model
+MANDATORY_OVAPI_LINE_ATTRIBUTES = [
+    "DataOwnerCode",
+    "LinePlanningNumber",
+    "LineDirection",
+    "LineWheelchairAccessible",
+    "TransportType",
+    "DestinationName50",
+    "DestinationCode",
+    "LinePublicNumber",
+    "LineName"]
 
 
-def query_api(base_url, endpoint, max_tries=1):
+def query_api(base_url: str, endpoint: str, max_tries: int = 1):
+    """Queries an API for an url and a specific endpoint
+    Returns the content of the response for a 200 success code
+    Otherwise retries until tries get to max_tries then fails.
+
+    Args:
+        base_url (str): Base url of the endpoint
+        endpoint (str): Specific endpoint to query
+        max_tries (int, optional): Number of tries until the function fails
+
+    Returns:
+        dict: Content of the api response for a success, None otherwise
+    """
     url = f"{base_url}{endpoint}"
     retry_count = 0
     while retry_count < max_tries:
@@ -26,51 +49,62 @@ def query_api(base_url, endpoint, max_tries=1):
 
     return None
 
-# Function to create SQLite table
 
+def check_ovapi_line_data_integrity(data):
+    if data is None or not isinstance(data, dict):
+        raise ValueError(
+            "The data passed doesn't conform to OVAPI"
+            "standard (not a proper dictionary)")
 
-# def create_table(cursor):
-#     cursor.execute('''
-#         CREATE TABLE IF NOT EXISTS ovapi_data (
-#             id INTEGER PRIMARY KEY AUTOINCREMENT,
-#             line_name TEXT,
-#             line_number TEXT,
-#             departure_times TEXT,
-#             last_updated TEXT
-#         );
-#     ''')
-#     print("Table 'ovapi_data' created successfully.")
+    for mandatory_attribute in MANDATORY_OVAPI_LINE_ATTRIBUTES:
 
-# # Function to insert data into the SQLite table
+        if not all(mandatory_attribute in data[line] for line in data):
+            raise ValueError(
+                f"The data passed doesn't conform to OVAPI"
+                f"standard no {mandatory_attribute} for one or more line")
 
+    # Function to create SQLite table
 
-# def insert_data(cursor, data):
-#     for line in data:
-#         print(line)
-#         print(type(line))
-#         line_name = line.get("LineName", "")
-#         line_number = line.get("LineNumber", "")
-#         departure_times = str(line.get("DepartureTimes", ""))
-#         last_updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # def create_table(cursor):
+    #     cursor.execute('''
+    #         CREATE TABLE IF NOT EXISTS ovapi_data (
+    #             id INTEGER PRIMARY KEY AUTOINCREMENT,
+    #             line_name TEXT,
+    #             line_number TEXT,
+    #             departure_times TEXT,
+    #             last_updated TEXT
+    #         );
+    #     ''')
+    #     print("Table 'ovapi_data' created successfully.")
 
-#         cursor.execute('''
-#             INSERT INTO ovapi_data (line_name, line_number, departure_times, last_updated)
-#             VALUES (?, ?, ?, ?);
-#         ''', (line_name, line_number, departure_times, last_updated))
+    # # Function to insert data into the SQLite table
 
-#     print(f"{len(data)} records inserted into the table.")
+    # def insert_data(cursor, data):
+    #     for line in data:
+    #         print(line)
+    #         print(type(line))
+    #         line_name = line.get("LineName", "")
+    #         line_number = line.get("LineNumber", "")
+    #         departure_times = str(line.get("DepartureTimes", ""))
+    #         last_updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-# # Main function to execute the script
+    #         cursor.execute('''
+    #             INSERT INTO ovapi_data (line_name, line_number, departure_times, last_updated)
+    #             VALUES (?, ?, ?, ?);
+    #         ''', (line_name, line_number, departure_times, last_updated))
+
+    #     print(f"{len(data)} records inserted into the table.")
+
+    # # Main function to execute the script
 
 
 def main():
-    base_url = "http://v0.ovapi.nl/"
+    base_url = "http://v0.ovapi.nl"
     endpoint = "/line/"
 
     # Query the API
     api_data = query_api(base_url, endpoint)
-    print(api_data)
-    print(type(api_data))
+    check_ovapi_line_data_integrity(api_data)
 
     # if api_data:
     #     # Connect to SQLite database
