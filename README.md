@@ -87,18 +87,18 @@ The table is partitioned by id and DataOwnerCode, this improves performance for 
 
 ## Extraction
 - The current loading method fails if any row doesn't match the predefined format which is helpful for integrity but reduces data freshness in the case of a few wrongly formatted rows.
-- If acceptable for the use case, we could drop badly formatted data and import the remaining one only. The current strategy ensures data completude.
+- If acceptable for the use case, we could drop badly formatted data and import the remaining one only.
 
-- Settings and secrets management through and centralize them around airflow instead of inside sub-modules
+- The settings and secrets management could be centralized in airflow or environment variables instead of inside sub-modules
 
 ## Loading
 - The loading strategy could be switched to a batch import if the data were of a few orders of magnitude bigger and write performance was an issue.
 - We could batch upsert by a thousand lines or by ten thousand lines to flatten the load on the database.
 
 ## Database & Modelization
-- The current data storage makes use of the TEXT type mainly (unfortunately even some attributes suffixed with "number" are strings in the API). Some data could be cleaned later in the transformation process.
+- The current data storage makes use of the TEXT type mainly (unfortunately even some attributes suffixed with "number" are strings in the API). Some data could be cleaned later in the transformation process to open for more suitable data types.
 
-- If filtering on transport type is a common use case, adding the column to the index would be beneficial for read operations (while causing a slight reduction in write performance). Also, the column could be a foreign key to a descriptive table
+- If filtering on transport type is a common use case, adding the column to the index would be beneficial for read operations (while causing a slight reduction in write performance). Also, the column could be a foreign key (integer) to a descriptive table.
 
 - Database connection and permission should obviously be managed securely.
 
@@ -106,9 +106,9 @@ The table is partitioned by id and DataOwnerCode, this improves performance for 
 
 - The DAG is minimal. It only calls one Python function which renders the process weak. To improve this we would (with more time) setup some cloud/shared storage (like s3), and then we could create specific tasks:
     - Extract task that stores the data in this storage.
-      Data quality check task
+    - Data quality check task
     - Loading task (to the database).
     
 - Options I discarded:
   - Using Xcoms -> they are made for metadata and small amounts of information, won't scale
-  - Storing the extract in the filesystem -> Doesn't scale to more than 1 worker
+  - Storing the extract in the file system -> Doesn't scale to more than 1 worker
