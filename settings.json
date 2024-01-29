@@ -1,0 +1,7 @@
+{
+    "dbname": "ovapi_lines",
+    "user": "postgres",
+    "password": "postgres",
+    "host": "localhost",
+    "port": "5432"
+}

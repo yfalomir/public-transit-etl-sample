@@ -1,4 +1,4 @@
-from import_ovapi_transport_date import query_api
+from import_ovapi_transport_data import query_api
 
 import json
 import unittest

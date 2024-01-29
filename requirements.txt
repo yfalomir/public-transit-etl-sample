@@ -1,0 +1,4 @@
+# Requirements for Blablacar OVAPI data test
+requests==2.31.0
+psycopg2==2.9.9
+apache-airflow==2.8.1
