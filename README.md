@@ -41,13 +41,13 @@ python -m import_ovapi_transport_data
 ├── sql_queries
 │   ├── create_ovapi_partition.sql
 │   ├── create_ovapi_table.sql
-│   └── insert_ovapi_row.sql
+│   └── upsert_ovapi_row.sql
 ├── dag_definition.py
 └── tests
     ├── __init__.py
     └── test_query_api.py
 ├── sql_helpers.py
-├── ReadME.md
+├── README.md
 ├── requirements.txt
 ├── sample_data
 │   └── success_data.json
