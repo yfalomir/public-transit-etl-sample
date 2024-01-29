@@ -13,7 +13,6 @@ Recommended setup steps:
 python -m venv my-ovapi-env
 source my-ovapi-env/bin/activate
 pip install -r requirements.txt
-
 ```
 
 # 1 - Setup
@@ -22,7 +21,6 @@ The script stores the data in a PostgreSQL database. It must be initialized with
 You can start one using docker
 ```
 docker run --name postgres-container -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=ovapi_lines -e POSTGRES_USER=postgres -p 5432:5432 -v "$(pwd)/init_script":/docker-entrypoint-initdb.d -d postgres:latest 
-
 ```
 
 The credentials and settings to be used by the project must be stored inside `settings.json`
@@ -32,7 +30,6 @@ The credentials and settings to be used by the project must be stored inside `se
 This project simply runs by calling `import_ovapi_transport_data.py`
 ```
 python -m import_ovapi_transport_data
-
 ```
 
 # 3 - Project structure
